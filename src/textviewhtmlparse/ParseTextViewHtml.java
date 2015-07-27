@@ -57,6 +57,7 @@ public class ParseTextViewHtml implements ImageGetter {
 	}
 	public void setTextViewHtml(TextView mTextview,String strHtml){
 		this.tv=mTextview;
+		//strHtml=recover(strHtml);
 		//strHtml=regTag(strHtml);
 		mTextview.setMovementMethod(LinkMovementMethod.getInstance());
 	    Spanned spanned = Html.fromHtml(strHtml,this, new MyTagHandler(context,mTextview,this));

@@ -1,6 +1,7 @@
 package textviewhtmlparse;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -29,6 +30,12 @@ public class MainActivity extends Activity {
         tv = (TextView) findViewById(R.id.tv);
         // 生成一个支持HTML格式的文本
         String str = getUrlPage("http://www.0yuanwang.com");
+     		try {
+			str=new String(str.getBytes("ISO-8859-1"),"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         new ParseTextViewHtml(this)
         .setUrlPrefix("http://www.0yuanwang.com")		
         .setTextViewHtml(tv,str);
