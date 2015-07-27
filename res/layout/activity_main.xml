@@ -10,7 +10,6 @@
         android:id="@+id/tv"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-         tools:context=".MainActivity"
          />
 </ScrollView>
 </LinearLayout>

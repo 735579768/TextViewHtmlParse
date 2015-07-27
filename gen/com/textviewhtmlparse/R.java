@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package me.zhangqian.test;
+package com.textviewhtmlparse;
 
 public final class R {
     public static final class attr {
