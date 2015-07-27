@@ -1,5 +1,13 @@
 package textviewhtmlparse;
 
+import java.io.IOException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
 import com.textviewhtmlparse.R;
 
 import android.os.Bundle;
@@ -20,8 +28,40 @@ public class MainActivity extends Activity {
         
         tv = (TextView) findViewById(R.id.tv);
         // 生成一个支持HTML格式的文本
-        String str = "<img src='http://img.1985t.com/uploads/attaches/2014/07/19016-WezXvz.jpg' />没有谁的生活始终充满了幸福快乐没有谁的生活始终充满了幸福快乐没有谁的生活始终充满了幸福快乐<img src='http://img.7160.com/uploads/allimg/140603/9-140603105047.jpg' />没有谁的生活始终充满了幸福快乐没有谁的生活始终充满了幸福快乐<img src='http://www.7ymm.com/uploads/allimg/y20110711/740310c19e81c3be6e711430a2783acc.jpg' />没有谁的生活始终充满了幸福快乐没有谁的生活始终充满了幸福快乐<img src='http://www.7ymm.com/uploads/allimg/y20110711/d7a5e207c5e7a81bfb5aad207e5207d2.jpg' />没有谁的生活始终充满了幸福快乐没有谁的生活始终充满了幸福快乐<img src='http://www.7ymm.com/uploads/allimg/y20110711/48b63d2fe2eb3294401fc7d01905dcea.jpg' />没有谁的生活始终充满了幸福快乐没有谁的生活始终充满了幸福快乐";
-        new ParseTextViewHtml(this).setTextViewHtml(tv,str);
+        String str = getUrlPage("http://www.0yuanwang.com");
+        new ParseTextViewHtml(this)
+        .setUrlPrefix("http://www.0yuanwang.com")		
+        .setTextViewHtml(tv,str);
     }
-    
+	protected String getUrlPage(String url){
+	    String uriAPI = url;
+	 
+	    HttpGet httpRequest = new HttpGet(uriAPI);
+	    try {
+	 
+	        HttpResponse httpResponse = new DefaultHttpClient()
+	                .execute(httpRequest);
+	 
+	        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+	 
+	            String strResult = EntityUtils.toString(httpResponse
+	                    .getEntity());
+	            //替换掉空行
+	           // strResult = eregi_replace("(\r\n|\r|\n|\n\r)", "",strResult);
+	            return strResult;
+	        } else {
+	            return "Error Response: "+ httpResponse.getStatusLine().toString();
+	        }
+	    } catch (ClientProtocolException e) {
+	        e.printStackTrace();
+	        return e.getMessage().toString();          
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return e.getMessage().toString();      
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return e.getMessage().toString();
+	    }
+	     
+	}
 }

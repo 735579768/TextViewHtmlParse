@@ -37,16 +37,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ParseTextViewHtml implements ImageGetter {
-	
+	public String URL_PREFIX="";
 	private Context context;
+	private boolean autoload=true;
 	public HashMap<String,URLDrawable> mydrawablelist;
+	private TextView tv;
 	
 	public ParseTextViewHtml(Context context) {
 		this.context = context;
-		
 		this.mydrawablelist=new HashMap<String,URLDrawable>();
 	}
+	public  ParseTextViewHtml setAutoLoad(boolean b){
+		autoload=b;
+		return this;
+	}
+	public  ParseTextViewHtml setUrlPrefix(String str){
+		URL_PREFIX=str;
+		return this;
+	}
 	public void setTextViewHtml(TextView mTextview,String strHtml){
+		this.tv=mTextview;
 		//strHtml=regTag(strHtml);
 		mTextview.setMovementMethod(LinkMovementMethod.getInstance());
 	    Spanned spanned = Html.fromHtml(strHtml,this, new MyTagHandler(context,mTextview,this));
@@ -61,7 +71,7 @@ public class ParseTextViewHtml implements ImageGetter {
 		// TODO Auto-generated method stub
 	      WindowManager wm = (WindowManager)context.getApplicationContext()
 	              .getSystemService(Context.WINDOW_SERVICE);
-	   int screenWidth = wm.getDefaultDisplay().getWidth(); 
+	   int screenWidth = wm.getDefaultDisplay().getWidth();
 		//将source进行MD5加密并保存至本地
 		String imageName = Common.md5(source);
 		String sdcardPath = Environment.getExternalStorageDirectory().toString(); // 获取SDCARD的路径
@@ -89,6 +99,7 @@ public class ParseTextViewHtml implements ImageGetter {
 		
 	}
 
+
 }
 
 class URLDrawable extends BitmapDrawable {
@@ -103,12 +114,16 @@ class URLDrawable extends BitmapDrawable {
 	}
 	public void setDrawable(Drawable nDrawable) {
 		drawable = nDrawable;
+		try{
 		if(screenWidth!=0){
 			drawable.setBounds(0, 0, screenWidth, drawable.getIntrinsicHeight()*screenWidth/drawable.getIntrinsicWidth());
 			setBounds(0, 0, screenWidth, drawable.getIntrinsicHeight()*screenWidth/drawable.getIntrinsicWidth());
 		}else{
 			drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 			setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+		}
+		}catch(Exception e){
+			e.getMessage();
 		}
 	}
 
@@ -156,8 +171,11 @@ class MyTagHandler implements TagHandler {
 	private Context context;
 	private TextView mTextView;
 	private ParseTextViewHtml parseObj;
-	
+	private int screenWidth;
 	public MyTagHandler(Context context,TextView tv, ParseTextViewHtml myimg) {
+	   WindowManager wm = (WindowManager)context.getApplicationContext()
+	              .getSystemService(Context.WINDOW_SERVICE);
+	   screenWidth = wm.getDefaultDisplay().getWidth(); 
 		this.context = context;
 		this.mTextView=tv;
 		this.parseObj=myimg;
@@ -218,7 +236,7 @@ class MyTagHandler implements TagHandler {
 		protected Drawable doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			String savePath = params[0];
-			String url = params[1];
+			String url = parseObj.URL_PREFIX+params[1];
 			
 			InputStream in = null;
 			try {
