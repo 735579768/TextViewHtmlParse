@@ -1,4 +1,5 @@
-package textviewhtmlparse;
+package com.main;
+
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -9,25 +10,27 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import com.textviewhtmlparse.R;
 
-import android.os.Bundle;
+import com.textviewhtmlparse.R;
+import com.textviewhtmlparse.TextViewHtmlParser;
+
 import android.app.Activity;
+import android.os.Bundle;
+import android.text.Html;
+import android.text.Spanned;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-	
-	 
-
-	
-	private TextView tv;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        
-        tv = (TextView) findViewById(R.id.tv);
+	private TextView texthtml;
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 */
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		texthtml=(TextView)findViewById(R.id.texthtml);
         // 生成一个支持HTML格式的文本
         String str = getUrlPage("http://www.0yuanwang.com");
      		try {
@@ -36,10 +39,11 @@ public class MainActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        new ParseTextViewHtml(this)
-        .setUrlPrefix("http://www.0yuanwang.com")		
-        .setTextViewHtml(tv,str);
-    }
+     		
+		new TextViewHtmlParser(this)
+			.setUrlPrefix("http://www.0yuanwang.com")
+			.setTextViewHtml(texthtml,str);
+	}
 	protected String getUrlPage(String url){
 	    String uriAPI = url;
 	 
