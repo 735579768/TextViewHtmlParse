@@ -5,21 +5,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.SimpleBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
+
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
@@ -30,6 +25,7 @@ public class TextViewHtmlParser implements Html.ImageGetter{
 	private TextView mTextView;
 	private String URL_PREFIX="";
 	private Context mContext;
+	private boolean isFullWidth=false;
     public TextViewHtmlParser(Context c,TextView tv) {
         this.mContext=c;
         this.mTextView=tv;
@@ -44,6 +40,10 @@ public class TextViewHtmlParser implements Html.ImageGetter{
     }
     public TextViewHtmlParser setUrlPrefix(String str){
     	this.URL_PREFIX=str;
+    	return this;
+    }
+    public TextViewHtmlParser setFullWidth(boolean b){
+    	this.isFullWidth=b;
     	return this;
     }
     //对字符串进行一些操作
@@ -69,11 +69,14 @@ public class TextViewHtmlParser implements Html.ImageGetter{
   	imageLoader.loadImage(source, new SimpleImageLoadingListener() {  
           @Override  
           public void onLoadingComplete(String imageUri, View view, Bitmap bitmap) {  
+        	  
         	  //缩放图片宽为全屏
         	  Matrix matrix = new Matrix();         
 		      int w=bitmap.getWidth();
+		      if(isFullWidth){
 		      float bili=(float)width/(float)w;
         	  matrix.postScale(bili,bili); //长和宽放大缩小的比例
+		      }
         	  bitmap = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
 		      urlDrawable.bitmap = bitmap; 
 		      urlDrawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight()); 
