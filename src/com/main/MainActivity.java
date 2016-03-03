@@ -16,8 +16,6 @@ import com.textviewhtmlparse.TextViewHtmlParser;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spanned;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
